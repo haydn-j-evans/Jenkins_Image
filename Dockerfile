@@ -19,14 +19,14 @@ RUN apk add --no-cache \
 ARG jenkinsuser=jenkins
 ARG jenkinsgroup=jenkins
 ARG jenkinsuid=1010
-ARG jenkinsgid=1010
+ARG jenkinsguid=1010
 ARG http_port=8080
 ARG agent_port=50000
 ARG JENKINS_HOME=/var/jenkins_home
 ARG REF=/usr/share/jenkins/ref
 ARG certificate_dir=/tmp/cacerts/
 ARG dockergroup=docker
-ARG dockergid=999
+ARG dockerguid=999
 
 
 ENV JENKINS_HOME $JENKINS_HOME
@@ -37,14 +37,14 @@ ENV REF $REF
 # If you bind mount a volume from the host or a data container,
 # ensure you use the same uid
 RUN mkdir -p $JENKINS_HOME \
-  && chown ${jenkinsuid}:${jenkinsgid} $JENKINS_HOME \
-  && addgroup -g ${jenkinsgid} ${jenkinsgroup} \
+  && chown ${jenkinsuid}:${jenkinsguid} $JENKINS_HOME \
+  && addgroup -g ${jenkinsguid} ${jenkinsgroup} \
   && adduser -h "$JENKINS_HOME" -u ${jenkinsuid} -G ${jenkinsgroup} -s /bin/bash -D ${jenkinsuser}
 
 # Create docker group inside container to match outside docker group
 
 RUN delgroup ping
-RUN addgroup -g ${dockeruid} ${dockergroup}
+RUN addgroup -g ${dockerguid} ${dockergroup}
 
 # Jenkins home directory is a volume, so configuration and build history
 # can be persisted and survive image upgrades
