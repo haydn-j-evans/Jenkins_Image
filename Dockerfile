@@ -13,7 +13,8 @@ RUN apk add --no-cache \
   unzip \
   openssl \
   ca-certificates \
-  docker
+  docker \
+  shadow
 
 ARG user=jenkins
 ARG group=jenkins
