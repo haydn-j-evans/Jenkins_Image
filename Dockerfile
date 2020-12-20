@@ -14,7 +14,7 @@ RUN apk add --no-cache \
   openssl \
   ca-certificates \
   software-properties-common \
-  gnupg2  
+  gnupg2
 
 ARG user=jenkins
 ARG group=jenkins
@@ -24,6 +24,7 @@ ARG http_port=8080
 ARG agent_port=50000
 ARG JENKINS_HOME=/var/jenkins_home
 ARG REF=/usr/share/jenkins/ref
+ARG certificate_dir=/tmp/cacerts/
 
 ENV JENKINS_HOME $JENKINS_HOME
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
@@ -40,6 +41,10 @@ RUN mkdir -p $JENKINS_HOME \
 # Jenkins home directory is a volume, so configuration and build history
 # can be persisted and survive image upgrades
 VOLUME $JENKINS_HOME
+
+# Add volume to allow trusted custom root certificates to be mounted into the container
+
+VOLUME $certificate_dir
 
 # $REF (defaults to `/usr/share/jenkins/ref/`) contains all reference configuration we want
 # to set on a fresh new installation. Use it to bundle additional plugins
@@ -94,6 +99,9 @@ COPY jenkins-support /usr/local/bin/jenkins-support
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY tini-shim.sh /bin/tini
 COPY jenkins-plugin-cli.sh /bin/jenkins-plugin-cli
+COPY Root_CA_setup.sh /tmp/Root_CA_Setup.sh
+
+RUN Root_CA_setup.sh
 
 ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
 
