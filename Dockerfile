@@ -15,10 +15,10 @@ RUN apk add --no-cache \
   ca-certificates \
   shadow
 
-ARG jenkinsuser=jenkins
-ARG jenkinsgroup=jenkins
-ARG jenkinsuid=1010
-ARG jenkinsguid=1010
+ARG user=jenkins
+ARG group=jenkins
+ARG uid=1010
+ARG gid=1010
 ARG http_port=8080
 ARG agent_port=50000
 ARG JENKINS_HOME=/var/jenkins_home
@@ -36,9 +36,9 @@ ENV REF $REF
 # If you bind mount a volume from the host or a data container,
 # ensure you use the same uid
 RUN mkdir -p $JENKINS_HOME \
-  && chown ${jenkinsuid}:${jenkinsguid} $JENKINS_HOME \
-  && addgroup -g ${jenkinsguid} ${jenkinsgroup} \
-  && adduser -h "$JENKINS_HOME" -u ${jenkinsuid} -G ${jenkinsgroup} -s /bin/bash -D ${jenkinsuser}
+  && chown ${uid}:${gid} $JENKINS_HOME \
+  && addgroup -g ${gid} ${group} \
+  && adduser -h "$JENKINS_HOME" -u ${uid} -G ${group} -s /bin/bash -D ${user}
 
 # Create docker group inside container to match outside docker group
 
@@ -84,7 +84,7 @@ RUN chown -R ${user} "$JENKINS_HOME" "$REF"
 ARG PLUGIN_CLI_URL=https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.2.0/jenkins-plugin-manager-2.2.0.jar
 RUN curl -fsSL ${PLUGIN_CLI_URL} -o /usr/lib/jenkins-plugin-manager.jar
 
-RUN usermod -aG ${dockergroup} ${jenkinsuser}
+RUN usermod -aG ${dockergroup} ${user}
 
 # for main web interface:
 EXPOSE ${http_port}
