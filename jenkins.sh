@@ -1,6 +1,6 @@
 #! /bin/bash -e
 
-. /tmp/Root_CA_Setup.sh
+#. /tmp/Root_CA_Setup.sh
 
 : "${JENKINS_WAR:="/usr/share/jenkins/jenkins.war"}"
 : "${JENKINS_HOME:="/var/jenkins_home"}"
