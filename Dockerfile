@@ -13,7 +13,6 @@ RUN apk add --no-cache \
   unzip \
   openssl \
   ca-certificates \
-  docker \
   shadow
 
 ARG jenkinsuser=jenkins
@@ -45,6 +44,9 @@ RUN mkdir -p $JENKINS_HOME \
 
 RUN delgroup ping
 RUN addgroup -g ${dockerguid} ${dockergroup}
+
+RUN apk add --no-cache \
+  docker
 
 # Jenkins home directory is a volume, so configuration and build history
 # can be persisted and survive image upgrades
