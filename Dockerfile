@@ -12,9 +12,7 @@ RUN apk add --no-cache \
   tzdata \
   unzip \
   openssl \
-  ca-certificates \
-  software-properties-common \
-  gnupg2
+  ca-certificates
 
 ARG user=jenkins
 ARG group=jenkins
