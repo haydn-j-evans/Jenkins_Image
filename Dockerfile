@@ -94,7 +94,7 @@ COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY tini-shim.sh /bin/tini
 COPY jenkins-plugin-cli.sh /bin/jenkins-plugin-cli
 
-USER Root
+USER root
 
 RUN chmod +x /usr/local/bin/jenkins-support
 RUN chmod +x /usr/local/bin/jenkins.sh
