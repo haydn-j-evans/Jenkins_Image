@@ -90,9 +90,9 @@ COPY jenkins-support /usr/local/bin/jenkins-support
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY tini-shim.sh /bin/tini
 COPY jenkins-plugin-cli.sh /bin/jenkins-plugin-cli
-COPY Root_CA_setup.sh /tmp/Root_CA_Setup.sh
+COPY Root_CA_Setup.sh /tmp/Root_CA_Setup.sh
 
-RUN Root_CA_setup.sh
+RUN Root_CA_Setup.sh
 
 ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
 
