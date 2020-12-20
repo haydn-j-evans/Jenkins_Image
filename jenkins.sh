@@ -1,5 +1,7 @@
 #! /bin/bash -e
 
+. /tmp/Root_CA_Setup.sh
+
 : "${JENKINS_WAR:="/usr/share/jenkins/jenkins.war"}"
 : "${JENKINS_HOME:="/var/jenkins_home"}"
 : "${COPY_REFERENCE_FILE_LOG:="${JENKINS_HOME}/copy_reference_file.log"}"

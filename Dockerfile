@@ -92,7 +92,7 @@ COPY tini-shim.sh /bin/tini
 COPY jenkins-plugin-cli.sh /bin/jenkins-plugin-cli
 COPY Root_CA_Setup.sh /tmp/Root_CA_Setup.sh
 
-RUN /tmp/Root_CA_Setup.sh
+RUN chmod +x /tmp/Root_CA_Setup.sh
 
 ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
 
