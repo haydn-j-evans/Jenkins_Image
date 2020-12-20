@@ -12,7 +12,8 @@ RUN apk add --no-cache \
   tzdata \
   unzip \
   openssl \
-  ca-certificates
+  ca-certificates \
+  docker
 
 ARG user=jenkins
 ARG group=jenkins
@@ -72,15 +73,6 @@ RUN chown -R ${user} "$JENKINS_HOME" "$REF"
 ARG PLUGIN_CLI_URL=https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.2.0/jenkins-plugin-manager-2.2.0.jar
 RUN curl -fsSL ${PLUGIN_CLI_URL} -o /usr/lib/jenkins-plugin-manager.jar
 
-# install docker client into container
-
-RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
-RUN add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/debian \
-   $(lsb_release -cs) \
-   stable"
-RUN apt-get update  -qq \
-    && apt-get install docker-ce -y
 RUN usermod -aG docker jenkins
 
 # for main web interface:
