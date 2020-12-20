@@ -16,15 +16,18 @@ RUN apk add --no-cache \
   docker \
   shadow
 
-ARG user=jenkins
-ARG group=jenkins
-ARG uid=1010
-ARG gid=1010
+ARG jenkinsuser=jenkins
+ARG jenkinsgroup=jenkins
+ARG jenkinsuid=1010
+ARG jenkinsgid=1010
 ARG http_port=8080
 ARG agent_port=50000
 ARG JENKINS_HOME=/var/jenkins_home
 ARG REF=/usr/share/jenkins/ref
 ARG certificate_dir=/tmp/cacerts/
+ARG dockergroup=docker
+ARG dockergid=999
+
 
 ENV JENKINS_HOME $JENKINS_HOME
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
@@ -34,9 +37,14 @@ ENV REF $REF
 # If you bind mount a volume from the host or a data container,
 # ensure you use the same uid
 RUN mkdir -p $JENKINS_HOME \
-  && chown ${uid}:${gid} $JENKINS_HOME \
-  && addgroup -g ${gid} ${group} \
-  && adduser -h "$JENKINS_HOME" -u ${uid} -G ${group} -s /bin/bash -D ${user}
+  && chown ${jenkinsuid}:${jenkinsgid} $JENKINS_HOME \
+  && addgroup -g ${jenkinsgid} ${jenkinsgroup} \
+  && adduser -h "$JENKINS_HOME" -u ${jenkinsuid} -G ${jenkinsgroup} -s /bin/bash -D ${jenkinsuser}
+
+# Create docker group inside container to match outside docker group
+
+RUN delgroup ping
+RUN addgroup -g ${dockeruid} ${dockergroup}
 
 # Jenkins home directory is a volume, so configuration and build history
 # can be persisted and survive image upgrades
@@ -53,7 +61,7 @@ RUN mkdir -p ${REF}/init.groovy.d
 
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.235.4}
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.271}
 
 # jenkins.war checksum, download will be validated using it
 ARG JENKINS_SHA=e5688a8f07cc3d79ba3afa3cab367d083dd90daab77cebd461ba8e83a1e3c177
@@ -74,7 +82,7 @@ RUN chown -R ${user} "$JENKINS_HOME" "$REF"
 ARG PLUGIN_CLI_URL=https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.2.0/jenkins-plugin-manager-2.2.0.jar
 RUN curl -fsSL ${PLUGIN_CLI_URL} -o /usr/lib/jenkins-plugin-manager.jar
 
-RUN usermod -aG docker jenkins
+RUN usermod -aG ${dockergroup} ${jenkinsuser}
 
 # for main web interface:
 EXPOSE ${http_port}
