@@ -109,8 +109,10 @@ USER root
 RUN chmod +x /usr/local/bin/jenkins-support
 RUN chmod +x /usr/local/bin/jenkins.sh
 RUN chmod +x /bin/tini
-RUN chmod +x /bin/jenkins-plugin-cli 
-RUN chown jenkins:jenkins /tmp/Root_CA_Setup.sh
+RUN chmod +x /bin/jenkins-plugin-cli
+COPY cert.cer /usr/local/share/ca-certificates/cert.cer
+
+RUN $JAVA_HOME/bin/keytool -importcert -noprompt -alias localhost -keystore $JAVA_HOME/lib/security/cacerts -file /usr/local/share/ca-certificates/cert.cer -storepass changeit
 
 USER ${user}
 
